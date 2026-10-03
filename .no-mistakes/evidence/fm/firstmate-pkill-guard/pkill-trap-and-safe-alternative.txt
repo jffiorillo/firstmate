@@ -1,0 +1,15 @@
+## Read-only reproduction of the BSD pkill trailing-option trap named by rule 8 (pgrep only, no signals sent)
+$ uname -sr
+Darwin 27.0.0
+$ pgrep -f "fm-nomatch-01M4" | wc -l
+       0
+$ pgrep -f "fm-nomatch-01M4" -f | wc -l   # trailing -f parsed as a second pattern
+     181
+
+## Safe alternative the rule prescribes: stop only the listener on a port
+listener pid (saved)=58294 port=51554; bystander http.server pid=58295
+$ lsof -ti tcp:51554 -sTCP:LISTEN
+58294
+$ kill 58294
+listener 58294 stopped
+bystander 58295 (same 'http.server' pattern) still alive - a pattern kill would have taken it too
