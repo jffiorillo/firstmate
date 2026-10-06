@@ -1,0 +1,4 @@
+$ pgrep -f "fm-nomatch-zz9" -f | wc -l   # BSD trailing -f becomes a 2nd pattern
+     129
+$ pgrep -f "fm-nomatch-zz9" | wc -l
+       0

@@ -1,0 +1,13 @@
+# Base commit 5838f105 no-mistakes brief: pattern-kill rule lines
+(none - base brief has no pattern-kill rule)
+
+# Rule numbering in base brief
+22:1. First action: create your branch: `git checkout -b fm/base-nm --
+23:2. Run `no-mistakes doctor`; if it reports the repo is not initiali
+26:1. Never push to the default branch. Never merge a PR.
+27:2. Keep project edits inside this worktree; keep proof and scratch 
+30:3. Use gh-axi for GitHub operations and chrome-devtools-axi for bro
+31:4. Report status by appending one line:
+53:5. If you hit the same obstacle twice, append `blocked [at=<epoch>]
+54:6. If a decision belongs above the implementation worker (product c
+61:7. Never administer infrastructure that every lane shares. Two thin

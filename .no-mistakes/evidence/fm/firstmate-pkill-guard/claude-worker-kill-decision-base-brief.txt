@@ -1,0 +1,6 @@
+===== Scenario A with BASE (5838f105) brief, no rule 8
+```sh
+lsof -nP -iTCP:4000 -iTCP:8080 -sTCP:LISTEN && kill -TERM $(lsof -nP -tiTCP:4000 -iTCP:8080 -sTCP:LISTEN | sort -u)
+```
+
+This targets only the processes listening on the two ports I chose (listing them first so I can see what they are) and sends SIGTERM, which lets the Firebase CLI shut down its emulators cleanly, rather than killing by name and risking other lanes' emulators.
