@@ -56,9 +56,10 @@
 # succeeded. After gh returns success, GitHub's live state is read back and
 # accepted only when the pull request is merged or in the merge queue. gh's
 # GraphQL API supplies that queue-aware read; when that read fails, gh-axi's
-# own view still proves a landed merge, and every outcome it cannot prove
-# refuses, reporting the failed gh read and naming both failed reads when the
-# gh-axi view could not prove the outcome either.
+# own view still proves a landed merge, and every other outcome it cannot prove
+# refuses, except an accepted stack merge GitHub is still running, which is
+# reported pending (see below). A refusal reports the failed gh read and names
+# both failed reads when the gh-axi view could not prove the outcome either.
 # If the pull request remains open and the base branch has an effective
 # merge_queue rule, an attended refusal names the queue's configured merge
 # method and exact --attended-override -- --auto --<method> retry flags. While
@@ -90,8 +91,8 @@
 # the rest. A membership read that fails keeps gh pr merge, which GitHub itself
 # refuses for a stacked pull request. The verified head is sent as
 # the request's sha, the caller's merge method (squash by default) as
-# merge_method, and an attended --auto as merge_action merge_queue instead of
-# direct_merge; any other extra argument is refused. A still-pending request is
+# merge_method, and merge_action as direct_merge; any other extra argument,
+# --auto included, is refused. A still-pending request is
 # followed for a short bounded time; an outcome the live read still cannot
 # prove merged or queued is reported pending, not landed, with the merge poll
 # armed, and a failed result refuses. A stacked merge is refused while the away
@@ -1385,12 +1386,10 @@ github_report_unmerged_outcome() {
   github_report_queue_rules
 }
 
-# The asynchronous stack merge takes a merge method and a merge action, not gh
-# pr merge flags, so a stacked pull request accepts only a method and, under
-# --attended-override, --auto, which asks for the base branch's merge queue.
-# Any other extra argument is refused rather than silently dropped.
+# The asynchronous stack merge takes a merge method, not gh pr merge flags, so
+# a stacked pull request accepts only a method. Any other extra argument is
+# refused rather than silently dropped.
 FM_PR_GITHUB_STACK_METHOD=
-FM_PR_GITHUB_STACK_ACTION=
 github_stack_merge_args() {
   local arg pending=false method=''
   for arg in "$@"; do
@@ -1399,10 +1398,10 @@ github_stack_merge_args() {
       continue
     fi
     case "$arg" in
-      --squash|--merge|--rebase|--method=*|--auto|--auto=*|--disable-auto) ;;
+      --squash|--merge|--rebase|--method=*) ;;
       --method) pending=true ;;
       *)
-        printf 'error: a stacked pull request merges through GitHub'"'"'s asynchronous stack merge, which accepts only a merge method and --auto; refusing extra argument %s\n' "$arg" >&2
+        printf 'error: a stacked pull request merges through GitHub'"'"'s asynchronous stack merge, which accepts only a merge method; refusing extra argument %s\n' "$arg" >&2
         return 1
         ;;
     esac
@@ -1418,14 +1417,7 @@ github_stack_merge_args() {
       return 1
       ;;
   esac
-  if [ "$FM_PR_GITHUB_AUTO_REQUESTED" = true ]; then
-    # The merge queue applies its own configured method.
-    FM_PR_GITHUB_STACK_ACTION=merge_queue
-    FM_PR_GITHUB_STACK_METHOD=
-  else
-    FM_PR_GITHUB_STACK_ACTION=direct_merge
-    FM_PR_GITHUB_STACK_METHOD=$method
-  fi
+  FM_PR_GITHUB_STACK_METHOD=$method
 }
 
 # GitHub runs a stack merge in the background, so its outcome cannot be proven
@@ -1450,14 +1442,13 @@ FM_PR_GITHUB_STACK_UUID=
 FM_PR_GITHUB_STACK_MESSAGE=
 github_stack_merge_submit() {
   local body err_file err_text fields line rc=0
-  local request=(-f "sha=$FM_PR_MERGE_HEAD" -f "merge_action=$FM_PR_GITHUB_STACK_ACTION")
-  [ -z "$FM_PR_GITHUB_STACK_METHOD" ] || request+=(-f "merge_method=$FM_PR_GITHUB_STACK_METHOD")
   if ! err_file=$(mktemp "${TMPDIR:-/tmp}/fm-pr-merge-stack.XXXXXX"); then
     FM_PR_GITHUB_STACK_OUTPUT="error: could not create a temporary file; the stack merge was not submitted"
     return 1
   fi
   body=$(gh api --method PUT "repos/$PR_OWNER/$PR_REPO/pulls/$PR_NUMBER/merge-async" \
-    "${request[@]}" 2>"$err_file") || rc=$?
+    -f "sha=$FM_PR_MERGE_HEAD" -f merge_action=direct_merge \
+    -f "merge_method=$FM_PR_GITHUB_STACK_METHOD" 2>"$err_file") || rc=$?
   err_text=$(cat "$err_file" 2>/dev/null)
   rm -f "$err_file"
   FM_PR_GITHUB_STACK_OUTPUT=$body${err_text:+${body:+$'\n'}$err_text}

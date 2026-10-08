@@ -2448,6 +2448,24 @@ test_stacked_merge_refusals() {
   assert_no_grep 'merge-async' "$case_dir/gh.log" \
     "stacked-extra-arg: the stack merge was submitted"
 
+  case_dir=$(make_case stacked-auto)
+  mkdir -p "$case_dir/wt"
+  add_gh_mocks "$case_dir" "$head"
+  write_github_stack "$case_dir" 156 4 153:merged 156:open
+  write_github_stack_merge "$case_dir" merged merged "$head"
+  set +e
+  run_pr_merge "$case_dir" task-x1 "$url" --attended-override -- --auto --squash \
+    >"$case_dir/stdout" 2>"$case_dir/stderr"
+  rc=$?
+  set -e
+  expect_code 1 "$rc" "stacked-auto: an attended --auto must refuse on the stack merge"
+  assert_grep 'refusing extra argument --auto' "$case_dir/stderr" \
+    "stacked-auto: the refusal did not name --auto"
+  assert_no_grep 'merge-async' "$case_dir/gh.log" \
+    "stacked-auto: the stack merge was submitted"
+  assert_no_grep 'pr merge ' "$case_dir/gh.log" \
+    "stacked-auto: a merge was handed to the forge"
+
   case_dir=$(make_case stacked-away)
   mkdir -p "$case_dir/wt"
   add_gh_mocks "$case_dir" "$head"
@@ -2465,7 +2483,7 @@ test_stacked_merge_refusals() {
     "stacked-away: a stack merge was handed to the forge while away"
   assert_no_grep 'pr merge ' "$case_dir/gh.log" \
     "stacked-away: a merge was handed to the forge while away"
-  pass "a stacked merge refuses unmerged pull requests below it, unsupported arguments, and away authority"
+  pass "a stacked merge refuses unmerged pull requests below it, unsupported arguments including --auto, and away authority"
 }
 
 test_distinct_merged_prs_keep_distinct_wakes() {
