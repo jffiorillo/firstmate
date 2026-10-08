@@ -1,0 +1,114 @@
+### scenario: live-top-157
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/157 
+(stack reads proxied live to GitHub jffiorillo/chalk #157)
+--- exit code: 0
+--- stdout:
+armed: state/task-x1.check.sh
+verified: https://github.com/example/repo/pull/157 is merged (state=MERGED, merged=true, isInMergeQueue=false)
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/157 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1571571571571571571571571571571571571571
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/157 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/157 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/157
+api repos/example/repo/stacks?pull_request=157
+api --method PUT repos/example/repo/pulls/157/merge-async -f sha=1571571571571571571571571571571571571571 -f merge_action=direct_merge -f merge_method=squash
+api repos/example/repo/pulls/157/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=157 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+--- live GitHub calls:
+LIVE gh api repos/jffiorillo/chalk/pulls/157
+LIVE gh api repos/jffiorillo/chalk/stacks?pull_request=157
+
+### scenario: live-bottom-152
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/152 -- --rebase
+(stack reads proxied live to GitHub jffiorillo/chalk #152)
+--- exit code: 0
+--- stdout:
+armed: state/task-x1.check.sh
+verified: https://github.com/example/repo/pull/152 is merged (state=MERGED, merged=true, isInMergeQueue=false)
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/152 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1521521521521521521521521521521521521521
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/152 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/152 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/152
+api repos/example/repo/stacks?pull_request=152
+api --method PUT repos/example/repo/pulls/152/merge-async -f sha=1521521521521521521521521521521521521521 -f merge_action=direct_merge -f merge_method=rebase
+api repos/example/repo/pulls/152/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=152 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+--- live GitHub calls:
+LIVE gh api repos/jffiorillo/chalk/pulls/152
+LIVE gh api repos/jffiorillo/chalk/stacks?pull_request=152
+
+### scenario: live-replay-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153 
+(stack reads proxied live to GitHub jffiorillo/chalk #153; replaying pre-merge state with #152 unmerged)
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+error: refusing to merge https://github.com/example/repo/pull/153
+  - pull request(s) #152 below it in GitHub stack 158 have not merged, and a stack merge would land them unverified; merge the stack from the bottom
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+--- live GitHub calls:
+LIVE gh api repos/jffiorillo/chalk/pulls/153
+LIVE gh api repos/jffiorillo/chalk/stacks?pull_request=153
+
+### scenario: live-replay-157
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/157 
+(stack reads proxied live to GitHub jffiorillo/chalk #157; replaying pre-merge state with #152,153,156 unmerged)
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+error: refusing to merge https://github.com/example/repo/pull/157
+  - pull request(s) #152, #153, #156 below it in GitHub stack 158 have not merged, and a stack merge would land them unverified; merge the stack from the bottom
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/157 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/157 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/157
+api repos/example/repo/stacks?pull_request=157
+--- live GitHub calls:
+LIVE gh api repos/jffiorillo/chalk/pulls/157
+LIVE gh api repos/jffiorillo/chalk/stacks?pull_request=157
+

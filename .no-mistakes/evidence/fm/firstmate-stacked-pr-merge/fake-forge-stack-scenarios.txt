@@ -1,0 +1,314 @@
+### scenario: pending-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 0
+--- stdout:
+armed: state/task-x1.check.sh
+pending: GitHub accepted the stack merge for https://github.com/example/repo/pull/153 and is still running it in the background; nothing is reported landed yet and the merge poll remains armed (state=OPEN, merged=false, isInMergeQueue=false)
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+api --method PUT repos/example/repo/pulls/153/merge-async -f sha=1531531531531531531531531531531531531531 -f merge_action=direct_merge -f merge_method=squash
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=153 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.merge-authority task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: enqueued-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 0
+--- stdout:
+armed: state/task-x1.check.sh
+verified: https://github.com/example/repo/pull/153 is queued (state=OPEN, merged=false, isInMergeQueue=true)
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+api --method PUT repos/example/repo/pulls/153/merge-async -f sha=1531531531531531531531531531531531531531 -f merge_action=direct_merge -f merge_method=squash
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=153 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.merge-authority task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: failed-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+error: GitHub reported the stack merge for https://github.com/example/repo/pull/153 as failed: failed; a stack merge is atomic, so nothing in the stack merged
+error: the merge command's own output follows, quoted; it is the forge CLI's report, not this script's verdict:
+error: > {"status":"pending","details":{"message":"accepted","uuid":"5f0c-77aa","merge_method":"squash","merge_action":"direct_merge","expected_head_sha":"1531531531531531531531531531531531531531"}}
+error: GitHub merge outcome was not successful: state=OPEN, merged=false, isInMergeQueue=false
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+api --method PUT repos/example/repo/pulls/153/merge-async -f sha=1531531531531531531531531531531531531531 -f merge_action=direct_merge -f merge_method=squash
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=153 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+api --paginate repos/example/repo/rules/branches/main --jq .[] | select(.type == "merge_queue") | "merge_method=" + (.parameters.merge_method // "")
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.merge-authority task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: failed-queue-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+error: GitHub reported the stack merge for https://github.com/example/repo/pull/153 as failed: failed; a stack merge is atomic, so nothing in the stack merged
+error: the merge command's own output follows, quoted; it is the forge CLI's report, not this script's verdict:
+error: > {"status":"pending","details":{"message":"accepted","uuid":"5f0c-77aa","merge_method":"squash","merge_action":"direct_merge","expected_head_sha":"1531531531531531531531531531531531531531"}}
+error: GitHub merge outcome was not successful: state=OPEN, merged=false, isInMergeQueue=false
+error: base branch main requires the merge queue, but a stacked pull request merges only through GitHub's stack merge, never with --auto; re-check the pull request's merge queue state before retrying
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+api --method PUT repos/example/repo/pulls/153/merge-async -f sha=1531531531531531531531531531531531531531 -f merge_action=direct_merge -f merge_method=squash
+api repos/example/repo/pulls/153/merge-async/5f0c-77aa --jq .status + "\t" + ((.details.message // "") | tostring | gsub("[\r\n\t]"; " "))
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=153 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+api --paginate repos/example/repo/rules/branches/main --jq .[] | select(.type == "merge_queue") | "merge_method=" + (.parameters.merge_method // "")
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.merge-authority task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: auto-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153 --attended-override -- --auto --squash
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+error: a stacked pull request merges through GitHub's asynchronous stack merge, which accepts only a merge method; refusing extra argument --auto
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: disable-auto-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153 --attended-override -- --disable-auto
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+error: a stacked pull request merges through GitHub's asynchronous stack merge, which accepts only a merge method; refusing extra argument --disable-auto
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: bad-method-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153 -- --method=fastforward
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+error: merge method fastforward is not one the asynchronous stack merge accepts (merge, squash, rebase)
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: merge-method-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153 -- --merge
+--- exit code: 0
+--- stdout:
+armed: state/task-x1.check.sh
+verified: https://github.com/example/repo/pull/153 is merged (state=MERGED, merged=true, isInMergeQueue=false)
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+api --method PUT repos/example/repo/pulls/153/merge-async -f sha=1531531531531531531531531531531531531531 -f merge_action=direct_merge -f merge_method=merge
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=153 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+--- state dir:
+. .. .guard-watcher-stale-banner .wake-queue .wake-queue.seq .watcher-down contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.merge-authority task-x1.meta task-x1.pr-poll task-x1.pr-poll-merge-notified task-x1.pr-poll-registration 
+
+### scenario: away-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 2
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+error: GitHub merge refused while away because a stacked pull request merges asynchronously, which cannot prove an immediate merge; nothing was handed to the forge
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+--- state dir:
+. .. .afk-contract .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: unreadable-stack-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 1
+--- stdout:
+armed: state/task-x1.check.sh
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+error: refusing to merge https://github.com/example/repo/pull/153
+  - the GitHub stack this pull request belongs to could not be read
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+api repos/example/repo/stacks?pull_request=153
+--- state dir:
+. .. .guard-watcher-stale-banner contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.meta task-x1.pr-poll task-x1.pr-poll-registration 
+
+### scenario: pull-read-fails-153
+$ fm-pr-merge.sh task-x1 https://github.com/example/repo/pull/153
+--- exit code: 0
+--- stdout:
+armed: state/task-x1.check.sh
+verified: https://github.com/example/repo/pull/153 is merged (state=MERGED, merged=true, isInMergeQueue=false)
+--- stderr:
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  WATCHER DOWN - SUPERVISION IS OFF
+●  1 task(s) in flight, but no watcher has a fresh beacon (last beat: never, grace 300s).
+●  Trust the emitted supervision protocol for this harness; do not use shell & for watcher repair.
+●  This is a supervision warning only; the guarded operation WILL still run.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+notice: could not read whether the pull request belongs to a GitHub stack; using the synchronous merge, which GitHub refuses for a stacked pull request
+verified: https://github.com/example/repo/pull/153 is open and mergeable, with every unwaived required check reported and every unwaived check green at head 1531531531531531531531531531531531531531
+--- forge calls (gh.log):
+pr view https://github.com/example/repo/pull/153 --json headRefOid -q .headRefOid
+pr view https://github.com/example/repo/pull/153 --json state,isDraft,mergeable,mergeStateStatus,headRefOid,baseRefName,statusCheckRollup
+api repos/example/repo/branches/main
+api --paginate repos/example/repo/rules/branches/main
+api repos/example/repo/pulls/153
+pr merge 153 --repo example/repo --match-head-commit 1531531531531531531531531531531531531531 --squash
+api graphql -f query=query($owner:String!,$repo:String!,$number:Int!){repository(owner:$owner,name:$repo){pullRequest(number:$number){state merged isInMergeQueue baseRefName}}} -F owner=example -F repo=repo -F number=153 --jq .data.repository.pullRequest | "state=" + (.state // ""), "merged=" + (.merged | tostring), "queued=" + (.isInMergeQueue | tostring), "base=" + (.baseRefName // "")
+--- state dir:
+. .. .guard-watcher-stale-banner .wake-queue .wake-queue.seq .watcher-down contributions.check-trust contributions.check.sh task-x1.check.sh task-x1.merge-authority task-x1.meta task-x1.pr-poll task-x1.pr-poll-merge-notified task-x1.pr-poll-registration 
+
