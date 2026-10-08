@@ -65,6 +65,8 @@
 # method and exact --attended-override -- --auto --<method> retry flags. While
 # the away-posture record exists, asynchronous merge requests are refused and
 # queue retry flags are not offered because they would outlive away authority.
+# Nor are they offered for a stacked pull request, which merges only through
+# the stack merge; its refusal says to re-check the queue state instead.
 # An attended caller that already passed the configured method with --auto is
 # told instead that the accepted request has not entered the queue and its queue
 # state has to be re-checked.
@@ -1324,6 +1326,15 @@ github_report_queue_rules() {
     return 0
   fi
   github_read_queue_method
+  if [ "$FM_PR_GITHUB_STACKED" = true ]; then
+    case "$FM_PR_GITHUB_QUEUE_STATUS" in
+      single|conflicting|unrecognised)
+        printf 'error: base branch %s requires the merge queue, but a stacked pull request merges only through GitHub'"'"'s stack merge, never with --auto; re-check the pull request'"'"'s merge queue state before retrying\n' \
+          "$FM_PR_GITHUB_BASE" >&2
+        return 0
+        ;;
+    esac
+  fi
   case "$FM_PR_GITHUB_QUEUE_STATUS" in
     single)
       case "$FM_PR_GITHUB_QUEUE_METHOD" in
