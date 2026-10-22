@@ -1,0 +1,52 @@
+[
+  {
+    "check": "test_crewmate_scaffolds_forbid_pattern_kills",
+    "shell": "/opt/homebrew/bin/bash",
+    "result": "pass"
+  },
+  {
+    "check": "test_crewmate_scaffolds_forbid_pattern_kills",
+    "shell": "/bin/bash",
+    "result": "pass"
+  },
+  {
+    "check": "ship-no-mistakes",
+    "result": "pass",
+    "artifact": "ship-no-mistakes-brief.md"
+  },
+  {
+    "check": "ship-direct-PR",
+    "result": "pass",
+    "artifact": "ship-direct-PR-brief.md"
+  },
+  {
+    "check": "ship-local-only",
+    "result": "pass",
+    "artifact": "ship-local-only-brief.md"
+  },
+  {
+    "check": "scout",
+    "result": "pass",
+    "artifact": "scout-brief.md"
+  },
+  {
+    "check": "ship-conflicting-additions",
+    "result": "pass",
+    "artifact": "ship-conflicting-additions-brief.md"
+  },
+  {
+    "check": "scout-conflicting-additions",
+    "result": "pass",
+    "artifact": "scout-conflicting-additions-brief.md"
+  },
+  {
+    "check": "base-ship",
+    "result": "expected failure before fix",
+    "artifact": "base-ship-brief.md"
+  },
+  {
+    "check": "base-scout",
+    "result": "expected failure before fix",
+    "artifact": "base-scout-brief.md"
+  }
+]

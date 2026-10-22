@@ -1,0 +1,65 @@
+$ /opt/homebrew/bin/bash /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/tests/.kill-brief-selected.test.sh
+ok - fm-brief: scaffolds leave the worker role scope to the launch boundary and keep the secondmate contract
+ok - fm-brief.sh: every crewmate scaffold forbids pattern kills
+exit=0
+$ /bin/bash /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/tests/.kill-brief-selected.test.sh
+ok - fm-brief: scaffolds leave the worker role scope to the launch boundary and keep the secondmate contract
+ok - fm-brief.sh: every crewmate scaffold forbids pattern kills
+exit=0
+$ /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/fm-brief.sh ship-no-mistakes disposable-project --mode no-mistakes
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/ship-no-mistakes/brief.md (ship, mode=no-mistakes; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+Emitted ship-no-mistakes process rule:
+9. Never stop processes by name or pattern (`pkill`, `killall`, `pgrep ... | xargs kill`): a pattern
+   also matches sibling agents and the operator's shells and apps, and BSD `pkill -f PAT -f` reads
+   the trailing `-f` as a second pattern that matches every command line containing `-f`. Kill only
+   PIDs you started and saved, or the listener from `lsof -ti tcp:<port> -sTCP:LISTEN` on a port
+   your own command started; if anything else holds the port, do not kill it - report a blocker.
+
+$ /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/fm-brief.sh ship-direct-PR disposable-project --mode direct-PR
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/ship-direct-PR/brief.md (ship, mode=direct-PR; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+Emitted ship-direct-PR process rule:
+9. Never stop processes by name or pattern (`pkill`, `killall`, `pgrep ... | xargs kill`): a pattern
+   also matches sibling agents and the operator's shells and apps, and BSD `pkill -f PAT -f` reads
+   the trailing `-f` as a second pattern that matches every command line containing `-f`. Kill only
+   PIDs you started and saved, or the listener from `lsof -ti tcp:<port> -sTCP:LISTEN` on a port
+   your own command started; if anything else holds the port, do not kill it - report a blocker.
+
+$ /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/fm-brief.sh ship-local-only disposable-project --mode local-only
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/ship-local-only/brief.md (ship, mode=local-only; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+Emitted ship-local-only process rule:
+9. Never stop processes by name or pattern (`pkill`, `killall`, `pgrep ... | xargs kill`): a pattern
+   also matches sibling agents and the operator's shells and apps, and BSD `pkill -f PAT -f` reads
+   the trailing `-f` as a second pattern that matches every command line containing `-f`. Kill only
+   PIDs you started and saved, or the listener from `lsof -ti tcp:<port> -sTCP:LISTEN` on a port
+   your own command started; if anything else holds the port, do not kill it - report a blocker.
+
+$ /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/fm-brief.sh scout disposable-project --scout
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/scout/brief.md (scout; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+Emitted scout process rule:
+9. Never stop processes by name or pattern (`pkill`, `killall`, `pgrep ... | xargs kill`): a pattern
+   also matches sibling agents and the operator's shells and apps, and BSD `pkill -f PAT -f` reads
+   the trailing `-f` as a second pattern that matches every command line containing `-f`. Kill only
+   PIDs you started and saved, or the listener from `lsof -ti tcp:<port> -sTCP:LISTEN` on a port
+   your own command started; if anything else holds the port, do not kill it - report a blocker.
+
+$ /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/fm-brief.sh ship-conflicting-additions disposable-project --mode local-only
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/ship-conflicting-additions/brief.md (ship, mode=local-only; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+ship-conflicting-additions: guard preserved; appended cleanup request explicitly defers to Rules.
+$ /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/fm-brief.sh scout-conflicting-additions disposable-project --scout
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/scout-conflicting-additions/brief.md (scout; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+scout-conflicting-additions: guard preserved; appended cleanup request explicitly defers to Rules.
+$ /bin/bash /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/.kill-brief-base.sh base-ship disposable-project --mode no-mistakes
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/base-ship/brief.md (ship, mode=no-mistakes; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+base-ship: expected regression reproduced: emitted brief lacks process-kill rule.
+$ /bin/bash /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/bin/.kill-brief-base.sh base-scout disposable-project --scout
+scaffolded: /Users/joseff/.no-mistakes/worktrees/e6b6b3f653a0/01M5JEM71RVT9PFSZFF4C9DYZ1/.kill-brief-validation-pxq6q30r/home/data/base-scout/brief.md (scout; replace {TASK} and {FIRSTMATE_SPEC})
+exit=0
+base-scout: expected regression reproduced: emitted brief lacks process-kill rule.
+Disposable homes and temporary test executables removed.
